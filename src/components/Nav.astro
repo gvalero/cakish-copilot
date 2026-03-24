@@ -5,7 +5,7 @@ interface Props {
   currentPath?: string;
 }
 const { currentPath = '' } = Astro.props;
-const base = import.meta.env.BASE_URL;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 ---
 <header class="nav" id="site-nav">
   <div class="container">

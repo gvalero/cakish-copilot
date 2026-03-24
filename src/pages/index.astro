@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import { brand, hero, productIntro, occasions, finishes, availability, storyTeaser } from '../data/config';
-const base = import.meta.env.BASE_URL;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 ---
 <BaseLayout title={`${brand.name} — ${brand.tagline}`}>
   <Nav slot="nav" currentPath="" />

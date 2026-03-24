@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import { brand, story } from '../data/config';
-const base = import.meta.env.BASE_URL;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 ---
 <BaseLayout title={`Our Story — ${brand.name}`} description="The story behind Cakish — how a personal obsession with pavlova became a premium dessert brand.">
   <Nav slot="nav" currentPath="story" />

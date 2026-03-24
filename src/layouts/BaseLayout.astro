@@ -1,0 +1,57 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Premium pavlova centrepieces, handcrafted in Dublin for meaningful celebrations.' } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content={description} />
+  <meta name="theme-color" content="#F8F6F2" />
+  <link rel="canonical" href={canonicalURL} />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonicalURL} />
+  <meta property="og:site_name" content="Cakish" />
+
+  <title>{title}</title>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <slot name="nav" />
+  <main id="main">
+    <slot />
+  </main>
+  <slot name="footer" />
+
+  <script>
+    // Scroll reveal observer
+    const reveals = document.querySelectorAll('.reveal');
+    if (reveals.length > 0) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+      );
+      reveals.forEach((el) => observer.observe(el));
+    }
+  </script>
+</body>
+</html>

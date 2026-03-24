@@ -1,0 +1,481 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { brand, sizes, finishes, fulfilment } from '../data/config';
+---
+<BaseLayout title={`Order — ${brand.name}`} description="Order The Cakish Modern Pavlova. Choose your size and finish for collection in Dublin.">
+  <Nav slot="nav" currentPath="/order" />
+
+  <!-- ═══ ORDER HEADER ═══ -->
+  <section class="order-header">
+    <div class="container--content" style="text-align: center;">
+      <span class="t-eyebrow">Place Your Order</span>
+      <hr class="gold-rule gold-rule--center" style="margin: 1.25rem auto 2rem;" />
+      <h1 class="t-headline">The Cakish Modern Pavlova</h1>
+      <p class="t-subtitle" style="margin-top: 0.75rem;">Choose your size and finish below.</p>
+    </div>
+  </section>
+
+  <!-- ═══ ORDER BUILDER ═══ -->
+  <section class="order-builder" aria-label="Configure your order">
+    <div class="container--content">
+
+      <!-- Size Selection -->
+      <div class="order-step reveal">
+        <span class="t-label">Step 1</span>
+        <h2 class="t-title" style="margin-top: 0.5rem;">Select Your Size</h2>
+        <div class="size-options" role="radiogroup" aria-label="Size options">
+          {sizes.map((size) => (
+            <button
+              class="selection-card size-card"
+              data-size={size.id}
+              data-price={size.price}
+              data-label={size.label}
+              data-serves={size.serves}
+              role="radio"
+              aria-checked="false"
+              tabindex="0"
+            >
+              <div class="selection-card__check"></div>
+              <div class="size-card__top">
+                <span class="size-card__size">{size.label}</span>
+                <span class="size-card__serves">Serves {size.serves}</span>
+              </div>
+              <span class="size-card__price">€{size.price}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <!-- Finish Selection -->
+      <div class="order-step reveal reveal-delay-1">
+        <span class="t-label">Step 2</span>
+        <h2 class="t-title" style="margin-top: 0.5rem;">Choose Your Finish</h2>
+        <div class="finish-options" role="radiogroup" aria-label="Finish options">
+          {finishes.map((finish) => (
+            <button
+              class="selection-card finish-card"
+              data-finish={finish.id}
+              data-surcharge={finish.surcharge}
+              data-name={finish.name}
+              role="radio"
+              aria-checked="false"
+              tabindex="0"
+            >
+              <div class="selection-card__check"></div>
+              <h3 class="finish-card__name">{finish.name}</h3>
+              <p class="finish-card__desc t-small">{finish.description}</p>
+              {finish.surcharge > 0 ? (
+                <span class="finish-card__surcharge">+€{finish.surcharge}</span>
+              ) : (
+                <span class="finish-card__surcharge finish-card__surcharge--included">Included</span>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <!-- Quantity -->
+      <div class="order-step reveal reveal-delay-2">
+        <span class="t-label">Step 3</span>
+        <h2 class="t-title" style="margin-top: 0.5rem;">Quantity</h2>
+        <div class="qty-control" style="margin-top: 1rem;">
+          <button class="qty-control__btn" id="qty-minus" aria-label="Decrease quantity">−</button>
+          <span class="qty-control__value" id="qty-value" aria-live="polite">1</span>
+          <button class="qty-control__btn" id="qty-plus" aria-label="Increase quantity">+</button>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="order-step reveal reveal-delay-3">
+        <div class="summary-panel" id="order-summary" style="display: none;">
+          <h2 class="t-label" style="margin-bottom: 1rem;">Order Summary</h2>
+          <div class="summary-row">
+            <span class="t-body" id="summary-size">—</span>
+            <span class="t-body" id="summary-base-price">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="t-body" id="summary-finish">—</span>
+            <span class="t-body" id="summary-surcharge">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="t-body">Quantity</span>
+            <span class="t-body" id="summary-qty">1</span>
+          </div>
+          <div class="summary-row summary-row--total">
+            <span class="t-title" style="font-size: 1.125rem;">Estimated Total</span>
+            <span class="t-title" style="font-size: 1.125rem; color: var(--soft-gold);" id="summary-total">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fulfilment note -->
+      <div class="order-step reveal reveal-delay-4">
+        <div class="fulfilment-note">
+          <h3 class="t-label" style="margin-bottom: 0.75rem;">{fulfilment.heading}</h3>
+          <p class="t-small">{fulfilment.primary}</p>
+          <p class="t-small">{fulfilment.dublin}</p>
+          <p class="t-small">{fulfilment.delivery}</p>
+          <p class="t-small" style="margin-top: 0.75rem; font-style: italic;">{fulfilment.note}</p>
+        </div>
+      </div>
+
+      <!-- CTAs -->
+      <div class="order-ctas" id="order-ctas" style="display: none;">
+        <button class="btn btn--primary btn--large" id="checkout-btn" style="width: 100%;">
+          Proceed to Secure Checkout
+        </button>
+        <button class="btn btn--outline" id="enquiry-btn" style="width: 100%;">
+          Enquire For Your Date
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CHECKOUT DRAWER ═══ -->
+  <div class="drawer-overlay" id="drawer-overlay" aria-hidden="true"></div>
+  <div class="drawer" id="checkout-drawer" role="dialog" aria-label="Checkout" aria-modal="true">
+    <div class="drawer__header">
+      <h2 class="t-title" style="font-size: 1.25rem;">Checkout</h2>
+      <button class="drawer__close" id="drawer-close" aria-label="Close checkout">✕</button>
+    </div>
+    <div class="drawer__body">
+      <div>
+        <h3 class="t-label" style="margin-bottom: 1rem;">Your Order</h3>
+        <div class="summary-row">
+          <span class="t-body" id="drawer-product">The Cakish Modern Pavlova</span>
+        </div>
+        <div class="summary-row">
+          <span class="t-small" id="drawer-size">—</span>
+          <span class="t-small" id="drawer-base">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="t-small" id="drawer-finish">—</span>
+          <span class="t-small" id="drawer-surcharge">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="t-small">Quantity</span>
+          <span class="t-small" id="drawer-qty">1</span>
+        </div>
+        <div class="summary-row summary-row--total">
+          <span style="font-family: var(--font-serif); font-weight: 500;">Total</span>
+          <span style="font-family: var(--font-serif); font-weight: 500; color: var(--soft-gold);" id="drawer-total">—</span>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="t-label" style="margin-bottom: 0.75rem;">Collection</h3>
+        <p class="t-small">{fulfilment.primary}</p>
+        <p class="t-small" style="font-style: italic; margin-top: 0.5rem;">{fulfilment.note}</p>
+      </div>
+    </div>
+    <div class="drawer__footer">
+      <button class="btn btn--primary btn--large" id="pay-btn" style="width: 100%;">
+        Pay Securely
+      </button>
+      <p class="t-small" style="text-align: center; margin-top: 0.25rem;">
+        Secure checkout powered by Stripe
+      </p>
+    </div>
+  </div>
+
+  <!-- ═══ PAYMENT OVERLAY ═══ -->
+  <div class="payment-overlay" id="payment-overlay">
+    <div class="payment-overlay__card">
+      <div style="font-size: 2.5rem; margin-bottom: 1rem;">✦</div>
+      <h3 class="t-title">Payments Launching Soon</h3>
+      <p class="t-body" style="margin-top: 0.75rem;">
+        Secure online payments are coming very soon. In the meantime, you can reserve your order by enquiry.
+      </p>
+      <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 2rem;">
+        <a href={`mailto:${brand.email}?subject=Pavlova%20Order%20Enquiry`} class="btn btn--primary">
+          Enquire By Email
+        </a>
+        <button class="btn btn--outline" id="payment-overlay-close">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ ENQUIRY MODAL ═══ -->
+  <div class="payment-overlay" id="enquiry-overlay">
+    <div class="payment-overlay__card">
+      <h3 class="t-title">Reserve Your Order</h3>
+      <p class="t-body" style="margin-top: 0.75rem;">
+        Get in touch to reserve your Cakish Modern Pavlova. We'll confirm availability, collection details, and payment.
+      </p>
+      <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 2rem;">
+        <a href={`mailto:${brand.email}?subject=Pavlova%20Order%20Enquiry`} class="btn btn--primary">
+          Email Us
+        </a>
+        <a href={brand.instagramUrl} class="btn btn--outline" target="_blank" rel="noopener">
+          Message on Instagram
+        </a>
+        <button class="btn btn--ghost" id="enquiry-overlay-close" style="margin-top: 0.5rem;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .order-header {
+    padding: clamp(6rem, 15vw, 10rem) 0 clamp(1.5rem, 4vw, 3rem);
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(198, 167, 105, 0.04) 0%, transparent 60%),
+      var(--ivory);
+  }
+
+  .order-builder {
+    padding: 0 0 var(--space-xl);
+  }
+
+  .order-step {
+    padding: var(--space-lg) 0;
+    border-bottom: 1px solid var(--line-light);
+  }
+  .order-step:last-of-type { border-bottom: none; }
+
+  .size-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 1.25rem;
+  }
+
+  .size-card {
+    text-align: left;
+    padding: 1.5rem;
+  }
+  .size-card__top {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 1rem;
+  }
+  .size-card__size {
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+  }
+  .size-card__serves {
+    font-size: 0.8125rem;
+    color: var(--text-tertiary);
+  }
+  .size-card__price {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    color: var(--soft-gold);
+  }
+
+  .finish-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1.25rem;
+  }
+
+  .finish-card {
+    text-align: left;
+    padding: 1.5rem;
+  }
+  .finish-card__name {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    font-weight: 400;
+    margin-bottom: 0.5rem;
+  }
+  .finish-card__desc {
+    margin-bottom: 0.75rem;
+  }
+  .finish-card__surcharge {
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--soft-gold);
+  }
+  .finish-card__surcharge--included {
+    color: var(--text-tertiary);
+  }
+
+  .fulfilment-note {
+    padding: var(--space-md) var(--space-lg);
+    background: var(--soft-cream);
+    border-radius: var(--radius-md);
+    border-left: 2px solid var(--soft-gold);
+  }
+  .fulfilment-note p { margin-bottom: 0.25rem; }
+
+  .order-ctas {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-top: var(--space-lg);
+  }
+
+  @media (max-width: 768px) {
+    .size-options { grid-template-columns: 1fr; }
+    .finish-options { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script>
+  // ── State ──
+  let selectedSize: { id: string; label: string; price: number; serves: string } | null = null;
+  let selectedFinish: { id: string; name: string; surcharge: number } | null = null;
+  let quantity = 1;
+
+  // ── Elements ──
+  const sizeCards = document.querySelectorAll<HTMLElement>('.size-card');
+  const finishCards = document.querySelectorAll<HTMLElement>('.finish-card');
+  const qtyMinus = document.getElementById('qty-minus');
+  const qtyPlus = document.getElementById('qty-plus');
+  const qtyValue = document.getElementById('qty-value');
+  const summaryPanel = document.getElementById('order-summary');
+  const orderCtas = document.getElementById('order-ctas');
+  const checkoutBtn = document.getElementById('checkout-btn');
+  const enquiryBtn = document.getElementById('enquiry-btn');
+
+  // Drawer
+  const drawerOverlay = document.getElementById('drawer-overlay');
+  const drawer = document.getElementById('checkout-drawer');
+  const drawerClose = document.getElementById('drawer-close');
+
+  // Payment overlay
+  const payBtn = document.getElementById('pay-btn');
+  const paymentOverlay = document.getElementById('payment-overlay');
+  const paymentClose = document.getElementById('payment-overlay-close');
+
+  // Enquiry overlay
+  const enquiryOverlay = document.getElementById('enquiry-overlay');
+  const enquiryClose = document.getElementById('enquiry-overlay-close');
+
+  // ── Size selection ──
+  sizeCards.forEach((card) => {
+    card.addEventListener('click', () => {
+      sizeCards.forEach((c) => { c.classList.remove('active'); c.setAttribute('aria-checked', 'false'); });
+      card.classList.add('active');
+      card.setAttribute('aria-checked', 'true');
+      selectedSize = {
+        id: card.dataset.size!,
+        label: card.dataset.label!,
+        price: Number(card.dataset.price),
+        serves: card.dataset.serves!,
+      };
+      updateSummary();
+    });
+  });
+
+  // ── Finish selection ──
+  finishCards.forEach((card) => {
+    card.addEventListener('click', () => {
+      finishCards.forEach((c) => { c.classList.remove('active'); c.setAttribute('aria-checked', 'false'); });
+      card.classList.add('active');
+      card.setAttribute('aria-checked', 'true');
+      selectedFinish = {
+        id: card.dataset.finish!,
+        name: card.dataset.name!,
+        surcharge: Number(card.dataset.surcharge),
+      };
+      updateSummary();
+    });
+  });
+
+  // ── Quantity ──
+  qtyMinus?.addEventListener('click', () => {
+    if (quantity > 1) { quantity--; updateQty(); updateSummary(); }
+  });
+  qtyPlus?.addEventListener('click', () => {
+    if (quantity < 10) { quantity++; updateQty(); updateSummary(); }
+  });
+
+  function updateQty() {
+    if (qtyValue) qtyValue.textContent = String(quantity);
+  }
+
+  // ── Summary ──
+  function updateSummary() {
+    if (!selectedSize || !selectedFinish) {
+      summaryPanel!.style.display = 'none';
+      orderCtas!.style.display = 'none';
+      return;
+    }
+
+    summaryPanel!.style.display = 'block';
+    orderCtas!.style.display = 'flex';
+
+    const base = selectedSize.price;
+    const surcharge = selectedFinish.surcharge;
+    const total = (base + surcharge) * quantity;
+
+    document.getElementById('summary-size')!.textContent = `${selectedSize.label} Pavlova`;
+    document.getElementById('summary-base-price')!.textContent = `€${base}`;
+    document.getElementById('summary-finish')!.textContent = selectedFinish.name;
+    document.getElementById('summary-surcharge')!.textContent = surcharge > 0 ? `+€${surcharge}` : 'Included';
+    document.getElementById('summary-qty')!.textContent = String(quantity);
+    document.getElementById('summary-total')!.textContent = `€${total}`;
+  }
+
+  // ── Checkout drawer ──
+  function openDrawer() {
+    if (!selectedSize || !selectedFinish) return;
+
+    const base = selectedSize.price;
+    const surcharge = selectedFinish.surcharge;
+    const total = (base + surcharge) * quantity;
+
+    document.getElementById('drawer-size')!.textContent = `${selectedSize.label} Pavlova`;
+    document.getElementById('drawer-base')!.textContent = `€${base}`;
+    document.getElementById('drawer-finish')!.textContent = selectedFinish.name;
+    document.getElementById('drawer-surcharge')!.textContent = surcharge > 0 ? `+€${surcharge}` : 'Included';
+    document.getElementById('drawer-qty')!.textContent = String(quantity);
+    document.getElementById('drawer-total')!.textContent = `€${total}`;
+
+    drawerOverlay?.classList.add('open');
+    drawer?.classList.add('open');
+    document.body.style.overflow = 'hidden';
+
+    // Focus trap
+    setTimeout(() => drawerClose?.focus(), 100);
+  }
+
+  function closeDrawer() {
+    drawerOverlay?.classList.remove('open');
+    drawer?.classList.remove('open');
+    document.body.style.overflow = '';
+    checkoutBtn?.focus();
+  }
+
+  checkoutBtn?.addEventListener('click', openDrawer);
+  drawerOverlay?.addEventListener('click', closeDrawer);
+  drawerClose?.addEventListener('click', closeDrawer);
+
+  // ── Payment overlay ──
+  payBtn?.addEventListener('click', () => {
+    paymentOverlay?.classList.add('open');
+  });
+  paymentClose?.addEventListener('click', () => {
+    paymentOverlay?.classList.remove('open');
+  });
+
+  // ── Enquiry overlay ──
+  enquiryBtn?.addEventListener('click', () => {
+    enquiryOverlay?.classList.add('open');
+  });
+  enquiryClose?.addEventListener('click', () => {
+    enquiryOverlay?.classList.remove('open');
+  });
+
+  // ── Escape key ──
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (paymentOverlay?.classList.contains('open')) {
+        paymentOverlay.classList.remove('open');
+      } else if (enquiryOverlay?.classList.contains('open')) {
+        enquiryOverlay.classList.remove('open');
+      } else if (drawer?.classList.contains('open')) {
+        closeDrawer();
+      }
+    }
+  });
+</script>

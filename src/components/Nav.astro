@@ -1,0 +1,94 @@
+---
+import { nav } from '../data/config';
+
+interface Props {
+  currentPath?: string;
+}
+const { currentPath = '/' } = Astro.props;
+---
+<header class="nav" id="site-nav">
+  <div class="container">
+    <div class="nav__inner">
+      <a href="/" aria-label="Cakish — Home">
+        <img src="/logo.png" alt="Cakish" class="nav__logo" />
+      </a>
+
+      <nav class="nav__links" aria-label="Main navigation">
+        {nav.links.map((link) => (
+          <a
+            href={link.href}
+            class:list={['nav__link', { 'nav__link--active': currentPath === link.href }]}
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+
+      <button
+        class="nav__toggle"
+        id="nav-toggle"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="nav-mobile"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="nav__mobile" id="nav-mobile" role="dialog" aria-modal="true" aria-label="Navigation menu">
+  {nav.links.map((link) => (
+    <a href={link.href} class="nav__mobile-link">{link.label}</a>
+  ))}
+</div>
+
+<script>
+  const toggle = document.getElementById('nav-toggle');
+  const mobile = document.getElementById('nav-mobile');
+  const navEl = document.getElementById('site-nav');
+
+  // Mobile toggle
+  toggle?.addEventListener('click', () => {
+    const isOpen = toggle.classList.toggle('open');
+    mobile?.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(isOpen));
+    toggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+
+  // Close on link click
+  mobile?.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      toggle?.classList.remove('open');
+      mobile.classList.remove('open');
+      toggle?.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    });
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mobile?.classList.contains('open')) {
+      toggle?.classList.remove('open');
+      mobile.classList.remove('open');
+      toggle?.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      toggle?.focus();
+    }
+  });
+
+  // Scroll detection
+  let lastScroll = 0;
+  window.addEventListener('scroll', () => {
+    const current = window.scrollY;
+    if (current > 60) {
+      navEl?.classList.add('scrolled');
+    } else {
+      navEl?.classList.remove('scrolled');
+    }
+    lastScroll = current;
+  }, { passive: true });
+</script>

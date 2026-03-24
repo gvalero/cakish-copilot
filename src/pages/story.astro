@@ -1,0 +1,224 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { brand, story } from '../data/config';
+---
+<BaseLayout title={`Our Story — ${brand.name}`} description="The story behind Cakish — how a personal obsession with pavlova became a premium dessert brand.">
+  <Nav slot="nav" currentPath="/story" />
+
+  <!-- ═══ HERO ═══ -->
+  <section class="story-hero">
+    <div class="container--content" style="text-align: center;">
+      <span class="t-eyebrow">{story.hero.eyebrow}</span>
+      <hr class="gold-rule gold-rule--center" style="margin: 1.25rem auto 2rem;" />
+      <h1 class="t-display" style="font-size: clamp(2.5rem, 6vw, 4.5rem);">{story.hero.heading}</h1>
+    </div>
+  </section>
+
+  <!-- ═══ ORIGIN ═══ -->
+  <section class="section section--lg" aria-label="Origin story">
+    <div class="container--wide">
+      <div class="origin reveal">
+        <div class="origin__text">
+          <h2 class="t-headline">{story.origin.heading}</h2>
+          <div class="origin__paragraphs">
+            {story.origin.paragraphs.map((p, i) => (
+              <p class:list={['t-body-lg', { 'origin__first': i === 0 }]}>{p}</p>
+            ))}
+          </div>
+        </div>
+        <div class="origin__visual reveal reveal-delay-2">
+          <div class="editorial-frame editorial-frame--portrait">
+            <img src="/images/story-portrait.jpg" alt="Fresh meringue being prepared in the Cakish kitchen" loading="lazy" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PULL QUOTE ═══ -->
+  <section class="quote-section" aria-label="Quote">
+    <div class="container--narrow" style="text-align: center;">
+      <div class="reveal">
+        <blockquote class="pull-quote">
+          <span class="pull-quote__mark" aria-hidden="true">"</span>
+          <p class="t-headline" style="font-style: italic;">
+            What if a pavlova could feel like a gift?
+          </p>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PROCESS ═══ -->
+  <section class="section section--lg" aria-label="Our process">
+    <div class="container--wide">
+      <div class="process reveal">
+        <span class="t-eyebrow">How It's Made</span>
+        <hr class="gold-rule" style="margin: 1.25rem 0 2rem;" />
+        <h2 class="t-headline">{story.process.heading}</h2>
+        <div class="process__steps">
+          {story.process.steps.map((step, i) => (
+            <div class:list={['process__step', 'reveal', `reveal-delay-${i + 1}`]}>
+              <span class="process__number" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <h3 class="t-title">{step.title}</h3>
+                <p class="t-body" style="margin-top: 0.5rem;">{step.body}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ VALUES ═══ -->
+  <section class="section values-section" aria-label="Our values">
+    <div class="container--wide">
+      <div class="values reveal">
+        <h2 class="t-headline" style="text-align: center; margin-bottom: clamp(2rem, 4vw, 3.5rem);">
+          {story.values.heading}
+        </h2>
+        <div class="values__grid">
+          {story.values.items.map((item, i) => (
+            <div class:list={['values__item', 'reveal', `reveal-delay-${i + 1}`]}>
+              <h3 class="t-title">{item.title}</h3>
+              <p class="t-body" style="margin-top: 0.5rem;">{item.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CLOSING CTA ═══ -->
+  <section class="section section--lg" aria-label="Order">
+    <div class="container--narrow" style="text-align: center;">
+      <div class="reveal">
+        <hr class="gold-rule gold-rule--center" />
+        <h2 class="t-headline" style="margin-top: 2rem;">{story.closing.heading}</h2>
+        <p class="t-body-lg" style="margin-top: 1rem;">{story.closing.body}</p>
+        <a href="/order" class="btn btn--primary" style="margin-top: 2rem;">{story.closing.cta}</a>
+      </div>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .story-hero {
+    padding: clamp(6rem, 15vw, 10rem) 0 clamp(2rem, 5vw, 4rem);
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(198, 167, 105, 0.04) 0%, transparent 60%),
+      var(--ivory);
+  }
+
+  /* ── Origin ── */
+  .origin {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: clamp(3rem, 6vw, 6rem);
+    align-items: start;
+  }
+
+  .origin__text h2 {
+    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .origin__paragraphs {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .origin__first {
+    font-size: 1.1875rem;
+  }
+  .origin__first::first-letter {
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    float: left;
+    line-height: 1;
+    padding-right: 0.5rem;
+    color: var(--soft-gold);
+    font-weight: 400;
+  }
+
+  /* ── Pull quote ── */
+  .quote-section {
+    padding: clamp(3rem, 8vw, 8rem) 0;
+    background: var(--soft-cream);
+  }
+
+  .pull-quote {
+    position: relative;
+  }
+  .pull-quote__mark {
+    font-family: var(--font-serif);
+    font-size: clamp(3.5rem, 8vw, 6rem);
+    color: var(--soft-gold);
+    opacity: 0.3;
+    line-height: 1;
+    display: block;
+    margin-bottom: -1.5rem;
+  }
+
+  /* ── Process ── */
+  .process__steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: clamp(2rem, 4vw, 3rem);
+  }
+
+  .process__step {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    align-items: start;
+    padding: var(--space-lg) 0;
+    border-bottom: 1px solid var(--line-light);
+  }
+  .process__step:last-child { border-bottom: none; }
+
+  .process__number {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--soft-gold);
+    opacity: 0.4;
+    line-height: 1;
+    min-width: 3rem;
+  }
+
+  /* ── Values ── */
+  .values-section {
+    background: var(--soft-cream);
+  }
+
+  .values__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.5rem, 3vw, 3rem);
+  }
+
+  .values__item {
+    padding: var(--space-lg);
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--line-light);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .origin {
+      grid-template-columns: 1fr;
+    }
+    .origin__visual { order: -1; }
+
+    .values__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

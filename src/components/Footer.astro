@@ -1,0 +1,29 @@
+---
+import { brand, nav, footer } from '../data/config';
+---
+<footer class="footer">
+  <div class="container--content">
+    <div class="footer__inner">
+      <a href="/" aria-label="Cakish — Home">
+        <img src="/logo.png" alt="Cakish" class="footer__logo" />
+      </a>
+
+      <p class="t-small" style="max-width: 320px;">{footer.tagline}</p>
+
+      <nav class="footer__links" aria-label="Footer navigation">
+        {nav.links.map((link) => (
+          <a href={link.href} class="footer__link">{link.label}</a>
+        ))}
+      </nav>
+
+      <div class="footer__links">
+        <a href={`mailto:${brand.email}`} class="footer__link">{brand.email}</a>
+        <a href={brand.instagramUrl} class="footer__link" target="_blank" rel="noopener">
+          {brand.instagram}
+        </a>
+      </div>
+
+      <p class="footer__legal">{footer.legal}</p>
+    </div>
+  </div>
+</footer>

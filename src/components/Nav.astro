@@ -4,19 +4,20 @@ import { nav } from '../data/config';
 interface Props {
   currentPath?: string;
 }
-const { currentPath = '/' } = Astro.props;
+const { currentPath = '' } = Astro.props;
+const base = import.meta.env.BASE_URL;
 ---
 <header class="nav" id="site-nav">
   <div class="container">
     <div class="nav__inner">
-      <a href="/" aria-label="Cakish — Home">
-        <img src="/logo.png" alt="Cakish" class="nav__logo" />
+      <a href={base} aria-label="Cakish — Home">
+        <img src={`${base}logo.png`} alt="Cakish" class="nav__logo" />
       </a>
 
       <nav class="nav__links" aria-label="Main navigation">
         {nav.links.map((link) => (
           <a
-            href={link.href}
+            href={`${base}${link.href}`}
             class:list={['nav__link', { 'nav__link--active': currentPath === link.href }]}
           >
             {link.label}
@@ -41,7 +42,7 @@ const { currentPath = '/' } = Astro.props;
 
 <div class="nav__mobile" id="nav-mobile" role="dialog" aria-modal="true" aria-label="Navigation menu">
   {nav.links.map((link) => (
-    <a href={link.href} class="nav__mobile-link">{link.label}</a>
+    <a href={`${base}${link.href}`} class="nav__mobile-link">{link.label}</a>
   ))}
 </div>
 

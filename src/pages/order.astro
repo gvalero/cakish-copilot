@@ -3,9 +3,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import { brand, sizes, finishes, fulfilment } from '../data/config';
+const base = import.meta.env.BASE_URL;
 ---
 <BaseLayout title={`Order — ${brand.name}`} description="Order The Cakish Modern Pavlova. Choose your size and finish for collection in Dublin.">
-  <Nav slot="nav" currentPath="/order" />
+  <Nav slot="nav" currentPath="order" />
 
   <!-- ═══ ORDER HEADER ═══ -->
   <section class="order-header">

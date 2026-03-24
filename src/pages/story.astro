@@ -3,9 +3,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import { brand, story } from '../data/config';
+const base = import.meta.env.BASE_URL;
 ---
 <BaseLayout title={`Our Story — ${brand.name}`} description="The story behind Cakish — how a personal obsession with pavlova became a premium dessert brand.">
-  <Nav slot="nav" currentPath="/story" />
+  <Nav slot="nav" currentPath="story" />
 
   <!-- ═══ HERO ═══ -->
   <section class="story-hero">
@@ -30,7 +31,7 @@ import { brand, story } from '../data/config';
         </div>
         <div class="origin__visual reveal reveal-delay-2">
           <div class="editorial-frame editorial-frame--portrait">
-            <img src="/images/story-portrait.jpg" alt="Fresh meringue being prepared in the Cakish kitchen" loading="lazy" />
+            <img src={`${base}images/story-portrait.jpg`} alt="Fresh meringue being prepared in the Cakish kitchen" loading="lazy" />
           </div>
         </div>
       </div>
@@ -99,7 +100,7 @@ import { brand, story } from '../data/config';
         <hr class="gold-rule gold-rule--center" />
         <h2 class="t-headline" style="margin-top: 2rem;">{story.closing.heading}</h2>
         <p class="t-body-lg" style="margin-top: 1rem;">{story.closing.body}</p>
-        <a href="/order" class="btn btn--primary" style="margin-top: 2rem;">{story.closing.cta}</a>
+        <a href={`${base}order`} class="btn btn--primary" style="margin-top: 2rem;">{story.closing.cta}</a>
       </div>
     </div>
   </section>

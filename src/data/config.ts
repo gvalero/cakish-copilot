@@ -16,9 +16,9 @@ export const brand = {
 
 export const nav = {
   links: [
-    { label: 'Home', href: '/' },
-    { label: 'Order', href: '/order' },
-    { label: 'Our Story', href: '/story' },
+    { label: 'Home', href: '' },
+    { label: 'Order', href: 'order' },
+    { label: 'Our Story', href: 'story' },
   ],
 };
 

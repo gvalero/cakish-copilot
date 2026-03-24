@@ -3,22 +3,23 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import { brand, hero, productIntro, occasions, finishes, availability, storyTeaser } from '../data/config';
+const base = import.meta.env.BASE_URL;
 ---
 <BaseLayout title={`${brand.name} — ${brand.tagline}`}>
-  <Nav slot="nav" currentPath="/" />
+  <Nav slot="nav" currentPath="" />
 
   <!-- ═══ HERO ═══ -->
   <section class="hero" aria-label="Introduction">
     <div class="hero__inner container">
       <div class="hero__brand">
-        <img src="/logo.png" alt="Cakish" class="hero__logo" />
+        <img src={`${base}logo.png`} alt="Cakish" class="hero__logo" />
       </div>
       <div class="hero__divider"></div>
       <div class="hero__content">
         <h1 class="t-display hero__headline">{hero.headline}</h1>
         <p class="t-subtitle hero__subtitle">{hero.subtitle}</p>
         <div class="hero__cta">
-          <a href="/order" class="btn btn--primary">Order Now</a>
+          <a href={`${base}order`} class="btn btn--primary">Order Now</a>
         </div>
       </div>
     </div>
@@ -42,7 +43,7 @@ import { brand, hero, productIntro, occasions, finishes, availability, storyTeas
           </div>
           <div class="intro__visual reveal reveal-delay-2">
             <div class="editorial-frame editorial-frame--hero">
-              <img src="/images/pavlova-detail.jpg" alt="The Cakish Modern Pavlova — meringue, cream, and seasonal fruit" loading="lazy" />
+              <img src={`${base}images/pavlova-detail.jpg`} alt="The Cakish Modern Pavlova — meringue, cream, and seasonal fruit" loading="lazy" />
             </div>
           </div>
         </div>
@@ -78,7 +79,7 @@ import { brand, hero, productIntro, occasions, finishes, availability, storyTeas
             <div class:list={['finishes__card', 'reveal', `reveal-delay-${i + 1}`]}>
               <div class="editorial-frame editorial-frame--portrait">
                 <img
-                  src={i === 0 ? '/images/pavlova-floral.jpg' : '/images/pavlova-sliced.jpg'}
+                  src={i === 0 ? `${base}images/pavlova-floral.jpg` : `${base}images/pavlova-sliced.jpg`}
                   alt={finish.name}
                   loading="lazy"
                 />
@@ -106,7 +107,7 @@ import { brand, hero, productIntro, occasions, finishes, availability, storyTeas
         <hr class="gold-rule gold-rule--center" />
         <h2 class="t-headline" style="margin-top: 2rem;">{availability.heading}</h2>
         <p class="t-body-lg" style="margin-top: 1.25rem;">{availability.body}</p>
-        <a href="/order" class="btn btn--primary" style="margin-top: 2rem;">{availability.cta}</a>
+        <a href={`${base}order`} class="btn btn--primary" style="margin-top: 2rem;">{availability.cta}</a>
       </div>
     </div>
   </section>
@@ -122,11 +123,11 @@ import { brand, hero, productIntro, occasions, finishes, availability, storyTeas
           <p class="t-body-lg" style="margin-top: 1.25rem; max-width: 440px;">
             {storyTeaser.body}
           </p>
-          <a href="/story" class="btn btn--ghost" style="margin-top: 2rem;">{storyTeaser.cta} →</a>
+          <a href={`${base}story`} class="btn btn--ghost" style="margin-top: 2rem;">{storyTeaser.cta} →</a>
         </div>
         <div class="story-teaser__visual reveal reveal-delay-2">
           <div class="editorial-frame editorial-frame--landscape">
-            <img src="/images/story-landscape.jpg" alt="Elegant table setting with a Cakish pavlova centrepiece" loading="lazy" />
+            <img src={`${base}images/story-landscape.jpg`} alt="Elegant table setting with a Cakish pavlova centrepiece" loading="lazy" />
           </div>
         </div>
       </div>
